@@ -30,7 +30,9 @@ test.describe('Layout Functionality', () => {
     await expect(previewPane).toBeVisible();
   });
 
-  test('should display and allow resizing the Table of Contents panel', async ({ page }) => {
+  test('should display and allow resizing the Table of Contents panel', async ({
+    page,
+  }) => {
     const tocPanel = page.getByRole('navigation', { name: '目次' });
     const resizeHandle = page.locator('[data-testid="resizable-handle"]'); // Use data-testid selector
 
@@ -49,4 +51,4 @@ test.describe('Layout Functionality', () => {
     // const finalWidth = await tocPanel.boundingBox()?.width;
     // expect(finalWidth).not.toEqual(initialWidth);
   });
-}); 
+});

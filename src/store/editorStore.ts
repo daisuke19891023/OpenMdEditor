@@ -209,7 +209,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   createNewFile: () => {
     const { setCurrentFile } = get(); // Get only the action to reset state
     // 常に確認ダイアログを表示
-    if (!window.confirm('編集中の内容は破棄されます。新しいファイルを作成しますか？')) {
+    if (
+      !window.confirm(
+        '編集中の内容は破棄されます。新しいファイルを作成しますか？'
+      )
+    ) {
       return; // User cancelled
     }
     setCurrentFile(null); // Reset state for a new file

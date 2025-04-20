@@ -65,7 +65,8 @@ export const EditorHeader: React.FC = () => {
           onClick={toggleTheme}
           className="text-primary-foreground hover:bg-primary/90 focus-visible:ring-offset-primary-foreground" // Adjust focus ring offset
           aria-label="Toggle theme" // Add fixed aria-label for testing
-          title={ // Use title for dynamic state description
+          title={
+            // Use title for dynamic state description
             currentActualTheme === 'dark'
               ? 'ライトモードに切り替え'
               : 'ダークモードに切り替え'

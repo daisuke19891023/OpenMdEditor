@@ -76,4 +76,4 @@ export default defineConfig({
     //   use: devices['iPhone 12'],
     // },
   ],
-}); 
+});

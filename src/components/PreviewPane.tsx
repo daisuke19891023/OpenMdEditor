@@ -88,7 +88,9 @@ export const PreviewPane = forwardRef<PreviewPaneRef, PreviewPaneProps>(
 
     // --- Imperative Handle ---
     const scrollToHeading = useCallback((id: string) => {
-      const element = previewContainerRef.current?.querySelector(`#${CSS.escape(id)}`); // Use querySelector for safety
+      const element = previewContainerRef.current?.querySelector(
+        `#${CSS.escape(id)}`
+      ); // Use querySelector for safety
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {

@@ -144,7 +144,9 @@ export const EditorToolbar: React.FC = () => {
                 </span>
                 {/* Delete Button with Confirmation Dialog */}
                 <AlertDialog
-                  onOpenChange={(open: boolean) => !open && setDraftToDelete(null)}
+                  onOpenChange={(open: boolean) =>
+                    !open && setDraftToDelete(null)
+                  }
                 >
                   <AlertDialogTrigger asChild>
                     {/* Make delete button less prominent until hover */}
@@ -211,7 +213,11 @@ export const EditorToolbar: React.FC = () => {
         <ToggleGroupItem value="split" aria-label="分割モード" role="tab">
           分割
         </ToggleGroupItem>
-        <ToggleGroupItem value="preview" aria-label="プレビューモード" role="tab">
+        <ToggleGroupItem
+          value="preview"
+          aria-label="プレビューモード"
+          role="tab"
+        >
           プレビュー
         </ToggleGroupItem>
       </ToggleGroup>

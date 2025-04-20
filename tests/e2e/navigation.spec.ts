@@ -9,23 +9,40 @@ test.describe('Navigation (Table of Contents)', () => {
     await page.locator('.cm-content').fill(testMarkdown);
     // プレビューが更新されるのを待つ（より確実に待つ方法があれば改善）
     await page.waitForTimeout(500);
-    await expect(page.locator('[data-testid="preview-pane"] h1:has-text("Heading 1")')).toBeVisible();
-    await expect(page.locator('[data-testid="preview-pane"] h2:has-text("Heading 1.1")')).toBeVisible();
-    await expect(page.locator('[data-testid="preview-pane"] h1:has-text("Heading 2")')).toBeVisible();
-    await expect(page.getByRole('navigation', { name: '目次' }).getByRole('link', { name: 'Heading 2' })).toBeVisible();
-
+    await expect(
+      page.locator('[data-testid="preview-pane"] h1:has-text("Heading 1")')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-testid="preview-pane"] h2:has-text("Heading 1.1")')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-testid="preview-pane"] h1:has-text("Heading 2")')
+    ).toBeVisible();
+    await expect(
+      page
+        .getByRole('navigation', { name: '目次' })
+        .getByRole('link', { name: 'Heading 2' })
+    ).toBeVisible();
   });
 
   test('should display headings in Table of Contents', async ({ page }) => {
     const toc = page.getByRole('navigation', { name: '目次' });
 
     // 目次に見出しが表示されていることを確認
-    await expect(toc.getByRole('link', { name: 'Heading 1', exact: true })).toBeVisible();
-    await expect(toc.getByRole('link', { name: 'Heading 1.1', exact: true })).toBeVisible();
-    await expect(toc.getByRole('link', { name: 'Heading 2', exact: true })).toBeVisible();
+    await expect(
+      toc.getByRole('link', { name: 'Heading 1', exact: true })
+    ).toBeVisible();
+    await expect(
+      toc.getByRole('link', { name: 'Heading 1.1', exact: true })
+    ).toBeVisible();
+    await expect(
+      toc.getByRole('link', { name: 'Heading 2', exact: true })
+    ).toBeVisible();
   });
 
-  test('should scroll preview pane when TOC heading is clicked', async ({ page }) => {
+  test('should scroll preview pane when TOC heading is clicked', async ({
+    page,
+  }) => {
     const toc = page.getByRole('navigation', { name: '目次' });
     const previewPane = page.locator('[data-testid="preview-pane"]');
     const heading2InPreview = previewPane.locator('h1:has-text("Heading 2")');
@@ -44,6 +61,5 @@ test.describe('Navigation (Table of Contents)', () => {
     // await page.waitForTimeout(500);
     // const heading2BoundingBox = await heading2InPreview.boundingBox();
     // expect(heading2BoundingBox?.y).toBeLessThan(100); // 例：ビューポート上部にあることを確認
-
   });
-}); 
+});

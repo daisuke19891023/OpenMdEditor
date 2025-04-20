@@ -50,10 +50,12 @@ test.describe('Basic Functionality', () => {
     // PreviewPaneコンポーネントにdata-testid="preview-pane"を追加する必要があるかもしれません
     const previewPane = page.locator('[data-testid="preview-pane"]');
     await expect(previewPane.locator('h1:has-text("Welcome")')).toBeVisible();
-    await expect(previewPane.locator('p:has-text("Start typing your Markdown!")')).toBeVisible();
+    await expect(
+      previewPane.locator('p:has-text("Start typing your Markdown!")')
+    ).toBeVisible();
 
     // 目次内の初期コンテンツを確認
     const toc = page.getByRole('navigation', { name: '目次' });
     await expect(toc.getByRole('link', { name: 'Welcome' })).toBeVisible();
   });
-}); 
+});

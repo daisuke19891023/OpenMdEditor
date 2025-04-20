@@ -7,13 +7,17 @@ test.describe('UI Elements', () => {
   });
 
   test('should toggle theme', async ({ page }) => {
-    const themeToggleButton = page.getByRole('button', { name: 'Toggle theme' });
+    const themeToggleButton = page.getByRole('button', {
+      name: 'Toggle theme',
+    });
     const htmlElement = page.locator('html');
 
     // 1. Get initial theme class
-    const initialClass = await htmlElement.getAttribute('class') || '';
+    const initialClass = (await htmlElement.getAttribute('class')) || '';
     const isInitiallyDark = initialClass.includes('dark');
-    console.log(`Initial theme class: "${initialClass}", isInitiallyDark: ${isInitiallyDark}`);
+    console.log(
+      `Initial theme class: "${initialClass}", isInitiallyDark: ${isInitiallyDark}`
+    );
 
     // Function to check if theme is light
     const expectLightTheme = async () => {
@@ -76,4 +80,4 @@ test.describe('UI Elements', () => {
     await expect(statusBar).toContainText(/0 単語/);
     await expect(statusBar).toContainText(/0 文字/);
   });
-}); 
+});

@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  RefObject,
-  useCallback,
-  useState,
-  useEffect,
-  useRef,
-} from 'react';
+import { RefObject, useCallback, useState, useEffect, useRef } from 'react';
 import CodeMirrorEditor from '@/components/CodeMirrorEditor';
 import { PreviewPane, PreviewPaneRef } from '@/components/PreviewPane'; // Import PreviewPaneRef type
 import { useEditorStore } from '@/store/editorStore';

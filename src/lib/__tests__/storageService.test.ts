@@ -66,24 +66,31 @@ describe('storageService', () => {
     });
 
     it('should update an existing draft', () => {
-        // 既存の下書きを準備
-        const initialContent = 'Initial content';
-        const initialFileName = 'ExistingFile';
-        const initialId = storageService.saveDraft(initialContent, initialFileName);
-        expect(initialId).toBeDefined();
+      // 既存の下書きを準備
+      const initialContent = 'Initial content';
+      const initialFileName = 'ExistingFile';
+      const initialId = storageService.saveDraft(
+        initialContent,
+        initialFileName
+      );
+      expect(initialId).toBeDefined();
 
-        const updatedContent = 'Updated content';
-        const updatedFileName = 'ExistingFile_Renamed'; // ファイル名も変更してみる
-        const updatedId = storageService.saveDraft(updatedContent, updatedFileName, initialId!);
+      const updatedContent = 'Updated content';
+      const updatedFileName = 'ExistingFile_Renamed'; // ファイル名も変更してみる
+      const updatedId = storageService.saveDraft(
+        updatedContent,
+        updatedFileName,
+        initialId!
+      );
 
-        expect(updatedId).toBe(initialId); // IDは変わらないはず
+      expect(updatedId).toBe(initialId); // IDは変わらないはず
 
-        const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
-        expect(Object.keys(drafts).length).toBe(1); // 下書きは1つのまま
-        expect(drafts[updatedId!]).toBeDefined();
-        expect(drafts[updatedId!].content).toBe(updatedContent);
-        expect(drafts[updatedId!].fileName).toBe(updatedFileName); // ファイル名が更新されている
-        expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBe(updatedId);
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      expect(Object.keys(drafts).length).toBe(1); // 下書きは1つのまま
+      expect(drafts[updatedId!]).toBeDefined();
+      expect(drafts[updatedId!].content).toBe(updatedContent);
+      expect(drafts[updatedId!].fileName).toBe(updatedFileName); // ファイル名が更新されている
+      expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBe(updatedId);
     });
 
     // TODO: Add error case test if possible (e.g., localStorage full)
@@ -94,33 +101,33 @@ describe('storageService', () => {
     let draft2: Draft;
 
     beforeEach(() => {
-        // テストデータを準備
-        const id1 = storageService.saveDraft('Content 1', 'File1');
-        const id2 = storageService.saveDraft('Content 2', 'File2');
-        const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
-        draft1 = drafts[id1!];
-        draft2 = drafts[id2!];
-        localStorage.removeItem(CURRENT_DRAFT_ID_KEY); // loadDraftで設定されるか確認するためクリア
+      // テストデータを準備
+      const id1 = storageService.saveDraft('Content 1', 'File1');
+      const id2 = storageService.saveDraft('Content 2', 'File2');
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      draft1 = drafts[id1!];
+      draft2 = drafts[id2!];
+      localStorage.removeItem(CURRENT_DRAFT_ID_KEY); // loadDraftで設定されるか確認するためクリア
     });
 
     it('should load an existing draft and set it as current', () => {
-        const loadedDraft = storageService.loadDraft(draft1.id);
-        expect(loadedDraft).toEqual(draft1);
-        expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBe(draft1.id);
+      const loadedDraft = storageService.loadDraft(draft1.id);
+      expect(loadedDraft).toEqual(draft1);
+      expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBe(draft1.id);
     });
 
     it('should return null for a non-existent draft ID', () => {
-        const loadedDraft = storageService.loadDraft('non-existent-id');
-        expect(loadedDraft).toBeNull();
-        expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBeNull(); // current IDは設定されない
+      const loadedDraft = storageService.loadDraft('non-existent-id');
+      expect(loadedDraft).toBeNull();
+      expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBeNull(); // current IDは設定されない
     });
 
-     it('should handle errors during loading (e.g., corrupted data)', () => {
-        // 不正なデータをlocalStorageに設定
-        localStorage.setItem(DRAFTS_KEY, '{"invalid": "json"}');
-        const loadedDraft = storageService.loadDraft('any-id');
-        expect(loadedDraft).toBeNull();
-        // console.errorが呼ばれたことを確認したいが、ここでは省略
+    it('should handle errors during loading (e.g., corrupted data)', () => {
+      // 不正なデータをlocalStorageに設定
+      localStorage.setItem(DRAFTS_KEY, '{"invalid": "json"}');
+      const loadedDraft = storageService.loadDraft('any-id');
+      expect(loadedDraft).toBeNull();
+      // console.errorが呼ばれたことを確認したいが、ここでは省略
     });
   });
 
@@ -129,53 +136,53 @@ describe('storageService', () => {
     let draft2: Draft;
 
     beforeEach(() => {
-        // テストデータを準備
-        const id1 = storageService.saveDraft('Content 1', 'File1');
-        storageService.saveDraft('Content 2', 'File2'); // draft2を保存してcurrentを更新
-        const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
-        draft1 = drafts[id1!];
-        draft2 = drafts[Object.keys(drafts).find(k => k !== id1)!]; // draft2を取得
+      // テストデータを準備
+      const id1 = storageService.saveDraft('Content 1', 'File1');
+      storageService.saveDraft('Content 2', 'File2'); // draft2を保存してcurrentを更新
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      draft1 = drafts[id1!];
+      draft2 = drafts[Object.keys(drafts).find((k) => k !== id1)!]; // draft2を取得
     });
 
     it('should load the last saved/updated draft', () => {
-        const lastDraft = storageService.loadLastDraft();
-        expect(lastDraft).toEqual(draft2); // 最後にsaveDraftされたdraft2がロードされる
+      const lastDraft = storageService.loadLastDraft();
+      expect(lastDraft).toEqual(draft2); // 最後にsaveDraftされたdraft2がロードされる
     });
 
     it('should return null if current draft ID is not set', () => {
-        localStorage.removeItem(CURRENT_DRAFT_ID_KEY);
-        const lastDraft = storageService.loadLastDraft();
-        expect(lastDraft).toBeNull();
+      localStorage.removeItem(CURRENT_DRAFT_ID_KEY);
+      const lastDraft = storageService.loadLastDraft();
+      expect(lastDraft).toBeNull();
     });
 
     it('should return null if the current draft ID points to a non-existent draft', () => {
-        localStorage.setItem(CURRENT_DRAFT_ID_KEY, 'non-existent-id');
-        const lastDraft = storageService.loadLastDraft();
-        expect(lastDraft).toBeNull();
+      localStorage.setItem(CURRENT_DRAFT_ID_KEY, 'non-existent-id');
+      const lastDraft = storageService.loadLastDraft();
+      expect(lastDraft).toBeNull();
     });
   });
 
   describe('getAllDrafts', () => {
     it('should return an empty array when no drafts exist', () => {
-        const drafts = storageService.getAllDrafts();
-        expect(drafts).toEqual([]);
+      const drafts = storageService.getAllDrafts();
+      expect(drafts).toEqual([]);
     });
 
     it('should return all drafts sorted by lastModified descending', async () => {
-        // 異なる時間に下書きを作成
-        const id1 = storageService.saveDraft('Content 1', 'File1'); // oldest
-        await new Promise(resolve => setTimeout(resolve, 10)); // 少し待機
-        const id2 = storageService.saveDraft('Content 2', 'File2');
-        await new Promise(resolve => setTimeout(resolve, 10));
-        const id3 = storageService.saveDraft('Content 3', 'File3'); // newest
+      // 異なる時間に下書きを作成
+      const id1 = storageService.saveDraft('Content 1', 'File1'); // oldest
+      await new Promise((resolve) => setTimeout(resolve, 10)); // 少し待機
+      const id2 = storageService.saveDraft('Content 2', 'File2');
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      const id3 = storageService.saveDraft('Content 3', 'File3'); // newest
 
-        const allDrafts = storageService.getAllDrafts();
-        const storedDrafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      const allDrafts = storageService.getAllDrafts();
+      const storedDrafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
 
-        expect(allDrafts.length).toBe(3);
-        expect(allDrafts[0]).toEqual(storedDrafts[id3!]); // newest first
-        expect(allDrafts[1]).toEqual(storedDrafts[id2!]);
-        expect(allDrafts[2]).toEqual(storedDrafts[id1!]); // oldest last
+      expect(allDrafts.length).toBe(3);
+      expect(allDrafts[0]).toEqual(storedDrafts[id3!]); // newest first
+      expect(allDrafts[1]).toEqual(storedDrafts[id2!]);
+      expect(allDrafts[2]).toEqual(storedDrafts[id1!]); // oldest last
     });
   });
 
@@ -184,36 +191,36 @@ describe('storageService', () => {
     let id2: string;
 
     beforeEach(() => {
-        id1 = storageService.saveDraft('Content 1', 'File1')!;
-        id2 = storageService.saveDraft('Content 2', 'File2')!; // id2 is now current
+      id1 = storageService.saveDraft('Content 1', 'File1')!;
+      id2 = storageService.saveDraft('Content 2', 'File2')!; // id2 is now current
     });
 
     it('should delete an existing draft', () => {
-        const result = storageService.deleteDraft(id1);
-        expect(result).toBe(true);
+      const result = storageService.deleteDraft(id1);
+      expect(result).toBe(true);
 
-        const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
-        expect(drafts[id1]).toBeUndefined();
-        expect(drafts[id2]).toBeDefined();
-        expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBe(id2); // current IDは変わらない
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      expect(drafts[id1]).toBeUndefined();
+      expect(drafts[id2]).toBeDefined();
+      expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBe(id2); // current IDは変わらない
     });
 
     it('should delete the current draft and clear current ID', () => {
-        const result = storageService.deleteDraft(id2);
-        expect(result).toBe(true);
+      const result = storageService.deleteDraft(id2);
+      expect(result).toBe(true);
 
-        const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
-        expect(drafts[id1]).toBeDefined();
-        expect(drafts[id2]).toBeUndefined();
-        expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBeNull(); // current IDがクリアされる
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      expect(drafts[id1]).toBeDefined();
+      expect(drafts[id2]).toBeUndefined();
+      expect(localStorage.getItem(CURRENT_DRAFT_ID_KEY)).toBeNull(); // current IDがクリアされる
     });
 
     it('should return false for a non-existent draft ID', () => {
-        const result = storageService.deleteDraft('non-existent-id');
-        expect(result).toBe(false);
+      const result = storageService.deleteDraft('non-existent-id');
+      expect(result).toBe(false);
 
-        const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
-        expect(Object.keys(drafts).length).toBe(2); // 下書き数は変わらない
+      const drafts = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}');
+      expect(Object.keys(drafts).length).toBe(2); // 下書き数は変わらない
     });
   });
 

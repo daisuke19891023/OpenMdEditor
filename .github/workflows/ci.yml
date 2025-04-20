@@ -1,28 +1,40 @@
- name: CI
+name: CI
 
+# ワークフローを実行するトリガーを定義
 on:
+  # mainブランチへのpushイベント
   push:
     branches:
-      - main  # mainブランチへのプッシュ時に実行
+      - main
+  # mainブランチへのpull requestイベント
   pull_request:
     branches:
-      - main  # mainブランチへのプルリクエスト時に実行
+      - main
 
 jobs:
   build:
+    # ジョブを実行する環境を指定
     runs-on: ubuntu-latest
 
     steps:
+      # 1. リポジトリのコードをチェックアウト
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4 # Use latest major version
 
+      # 2. 指定したバージョンのNode.js環境をセットアップ
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4 # Use latest major version
         with:
-          node-version: '23.11'  # Node.jsのバージョンを指定
+          node-version: '23.11' # Node.jsのバージョンを指定
 
+      # 3. npm install を実行して依存関係をインストール
       - name: Install dependencies
-        run: npm install
+        run: npm ci # Use npm ci for faster, reliable installs in CI
 
+      # 4. Lintを実行
+      - name: Run lint
+        run: npm run lint # Lintチェックを実行するステップを追加
+
+      # 5. npm run test を実行してテストを実行
       - name: Run tests
         run: npm run test
