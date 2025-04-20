@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import * as React from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useUIStore } from '@/store/uiStore';
 import { useAIStore } from '@/store/aiStore'; // chatMode のみ取得
 import { useEditorStore } from '@/store/editorStore';

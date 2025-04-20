@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { useTheme } from '@/components/providers/ThemeProvider'; // Import useTheme hook
 import { Button } from '@/components/ui/button'; // Import Shadcn Button
@@ -64,7 +64,8 @@ export const EditorHeader: React.FC = () => {
           size="icon"
           onClick={toggleTheme}
           className="text-primary-foreground hover:bg-primary/90 focus-visible:ring-offset-primary-foreground" // Adjust focus ring offset
-          aria-label={
+          aria-label="Toggle theme" // Add fixed aria-label for testing
+          title={ // Use title for dynamic state description
             currentActualTheme === 'dark'
               ? 'ライトモードに切り替え'
               : 'ダークモードに切り替え'

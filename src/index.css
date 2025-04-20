@@ -1,7 +1,7 @@
+@import "./styles/globals.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "./styles/globals.css";
 
 /* You can add any global styles here that aren't covered by Tailwind/globals.css */

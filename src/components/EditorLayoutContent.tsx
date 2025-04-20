@@ -1,4 +1,5 @@
-import React, {
+import * as React from 'react';
+import {
   RefObject,
   useCallback,
   useState,
@@ -20,7 +21,7 @@ import { toast } from 'sonner'; // Import toast for notifications
 
 // Props definition including the ref for PreviewPane
 interface EditorLayoutContentProps {
-  previewPaneRef: RefObject<PreviewPaneRef | null>;
+  previewPaneRef: React.RefObject<PreviewPaneRef>;
 }
 
 export const EditorLayoutContent: React.FC<EditorLayoutContentProps> = ({
@@ -197,7 +198,11 @@ export const EditorLayoutContent: React.FC<EditorLayoutContentProps> = ({
 
   // Preview scroll handler
   const handlePreviewScroll = useCallback(
-    (info: ScrollInfo) => {
+    (event: React.UIEvent<HTMLDivElement>) => {
+      // Extract scroll info from event target
+      const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+      const info: ScrollInfo = { scrollTop, scrollHeight, clientHeight }; // Create ScrollInfo object
+
       previewScrollInfoRef.current = info; // Update latest info
       // If the other pane is programmatically scrolling, ignore this event briefly
       if (isEditorScrolling.current) return;
@@ -256,6 +261,7 @@ export const EditorLayoutContent: React.FC<EditorLayoutContentProps> = ({
       {(activeTab === 'edit' || activeTab === 'split') && (
         // Use Shadcn border variable
         <div
+          data-testid="editor-pane"
           className={`relative ${activeTab === 'split' ? 'w-1/2' : 'w-full'} h-full border-r border-border`}
         >
           <CodeMirrorEditor
@@ -291,8 +297,6 @@ export const EditorLayoutContent: React.FC<EditorLayoutContentProps> = ({
             ref={previewPaneRef} // Pass the ref for TOC scrolling
             // Only attach scroll handler in split view
             onScroll={activeTab === 'split' ? handlePreviewScroll : undefined}
-            // Pass the scroll target percentage from state
-            scrollToPercent={previewScrollToPercent}
           />
         </div>
       )}

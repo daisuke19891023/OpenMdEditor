@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { HeadingItem } from '@/types/editor';
 import { cn } from '@/lib/utils'; // Shadcn UI utility for class names
@@ -11,7 +11,7 @@ interface TableOfContentsProps {
 
 export const TableOfContents: React.FC<TableOfContentsProps> = ({
   onHeadingClick,
-}) => {
+}: TableOfContentsProps) => {
   // Get the list of headings from the Zustand store
   const headings = useEditorStore((state) => state.headings);
 
@@ -36,7 +36,11 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   // Render the list of headings
   return (
     // Container with padding, full height, and vertical scroll
-    <div className="p-4 h-full overflow-y-auto text-sm">
+    <div
+      role="navigation" // Add role for accessibility
+      aria-label="目次" // Add accessible name
+      className="p-4 h-full overflow-y-auto text-sm"
+    >
       {/* TOC Title */}
       <p className="mb-3 font-semibold text-foreground text-base">目次</p>
       {/* Unordered list for headings */}

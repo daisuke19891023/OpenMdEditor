@@ -207,17 +207,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   createNewFile: () => {
-    const { isSaved, saveCurrentDraft, setCurrentFile } = get(); // Get current state/actions
-    // Check for unsaved changes
-    if (!isSaved) {
-      if (
-        !window.confirm(
-          '編集中の内容は破棄されます。新しいファイルを作成しますか？'
-        )
-      ) {
-        return; // User cancelled
-      }
-      // Proceed even if unsaved, user confirmed discard
+    const { setCurrentFile } = get(); // Get only the action to reset state
+    // 常に確認ダイアログを表示
+    if (!window.confirm('編集中の内容は破棄されます。新しいファイルを作成しますか？')) {
+      return; // User cancelled
     }
     setCurrentFile(null); // Reset state for a new file
     // Clearing chat history should be handled by aiStore or component if needed

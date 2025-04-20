@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import * as React from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { useUIStore } from '@/store/uiStore';
 // import { useAIStore } from '@/store/aiStore'; // Not directly needed here anymore
@@ -93,7 +94,10 @@ export const EditorToolbar: React.FC = () => {
   // --- Render ---
   return (
     // Use Shadcn UI theme variables for background and borders
-    <div className="bg-muted/40 p-2 flex justify-between items-center border-b flex-shrink-0 h-12">
+    <div
+      role="toolbar" // Add role="toolbar" for accessibility and testing
+      className="bg-muted/40 p-2 flex justify-between items-center border-b flex-shrink-0 h-12"
+    >
       {' '}
       {/* Fixed height */}
       {/* Left Section: File Actions */}
@@ -104,7 +108,7 @@ export const EditorToolbar: React.FC = () => {
         </Button>
 
         {/* Open Draft Dropdown */}
-        <DropdownMenu onOpenChange={(open) => open && fetchDrafts()}>
+        <DropdownMenu onOpenChange={(open: boolean) => open && fetchDrafts()}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
               <FolderOpen className="h-4 w-4 mr-1" /> 開く
@@ -123,7 +127,7 @@ export const EditorToolbar: React.FC = () => {
               <DropdownMenuItem
                 key={draft.id}
                 className="flex justify-between items-center pr-2" // Adjust padding
-                onSelect={(e) => e.preventDefault()} // Prevent closing on item click itself
+                onSelect={(e: Event) => e.preventDefault()} // Prevent closing on item click itself
               >
                 {/* Clickable area to load the draft */}
                 <span
@@ -140,13 +144,14 @@ export const EditorToolbar: React.FC = () => {
                 </span>
                 {/* Delete Button with Confirmation Dialog */}
                 <AlertDialog
-                  onOpenChange={(open) => !open && setDraftToDelete(null)}
+                  onOpenChange={(open: boolean) => !open && setDraftToDelete(null)}
                 >
                   <AlertDialogTrigger asChild>
                     {/* Make delete button less prominent until hover */}
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label="削除"
                       className="h-6 w-6 ml-auto opacity-50 hover:opacity-100 focus-visible:opacity-100 flex-shrink-0"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -167,6 +172,7 @@ export const EditorToolbar: React.FC = () => {
                     <AlertDialogFooter>
                       <AlertDialogCancel>キャンセル</AlertDialogCancel>
                       <AlertDialogAction
+                        data-testid="confirm-delete-button"
                         onClick={handleDeleteDraft}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
@@ -199,13 +205,13 @@ export const EditorToolbar: React.FC = () => {
         size="sm"
         variant="outline" // Use outline variant
       >
-        <ToggleGroupItem value="edit" aria-label="編集モード">
+        <ToggleGroupItem value="edit" aria-label="編集モード" role="tab">
           編集
         </ToggleGroupItem>
-        <ToggleGroupItem value="split" aria-label="分割モード">
+        <ToggleGroupItem value="split" aria-label="分割モード" role="tab">
           分割
         </ToggleGroupItem>
-        <ToggleGroupItem value="preview" aria-label="プレビューモード">
+        <ToggleGroupItem value="preview" aria-label="プレビューモード" role="tab">
           プレビュー
         </ToggleGroupItem>
       </ToggleGroup>

@@ -1,4 +1,5 @@
-import React, {
+import * as React from 'react';
+import {
   useEffect,
   useState,
   useRef,
@@ -8,41 +9,46 @@ import React, {
   useCallback,
 } from 'react';
 import { useEditorStore } from '@/store/editorStore';
-import { parseMarkdown } from '@/lib/markdownParser';
-import type { ScrollInfo } from '@/types/editor'; // Import shared type
+import { parseMarkdown } from '@/lib/markdownParser'; // Re-import parseMarkdown
+import type { ScrollInfo, HeadingItem } from '@/types/editor'; // Keep ScrollInfo and HeadingItem
+// Remove direct imports of marked, DOMPurify, hljs
+// import { marked } from 'marked';
+// import DOMPurify from 'dompurify';
+// import hljs from 'highlight.js';
+// import 'highlight.js/styles/github-dark.css';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 // --- Props Definition ---
 interface PreviewPaneProps {
-  onScroll?: (info: ScrollInfo) => void; // Callback to notify parent about scrolling
-  scrollToPercent?: number | null; // Instruction from parent to scroll to a percentage
+  className?: string;
+  onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
+  // Remove scrollRef as it was unused and causing warnings via viewportRef
+  // scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
 // --- Ref Handle Definition ---
-// Defines functions that can be called on this component's ref by the parent
 export interface PreviewPaneRef {
-  scrollToHeading: (id: string) => void; // Scrolls to the heading with the given ID
-  getContainer: () => HTMLDivElement | null; // Returns the scrollable container element
+  scrollToHeading: (id: string) => void;
+  getContainer: () => HTMLDivElement | null;
 }
 
 // --- Component Definition using forwardRef ---
 export const PreviewPane = forwardRef<PreviewPaneRef, PreviewPaneProps>(
-  ({ onScroll, scrollToPercent }, ref) => {
+  // Remove scrollRef from props destructuring
+  ({ className, onScroll }, ref) => {
     // --- Zustand Store Hook ---
-    // Get markdown content and heading update action from the store
     const markdown = useEditorStore((state) => state.markdown);
     const setHeadings = useEditorStore((state) => state.setHeadings);
 
     // --- Local State ---
-    // State to hold the rendered HTML string
     const [html, setHtml] = useState<string>('');
 
     // --- Refs ---
-    // Ref for the scrollable container div
     const previewContainerRef = useRef<HTMLDivElement>(null);
-    // Ref to store the latest onScroll callback to prevent effect re-runs
     const onScrollRef = useRef(onScroll);
-    // Ref to track if scrolling is currently being done programmatically
-    const isProgrammaticScroll = useRef(false);
+    // Remove isProgrammaticScroll ref as the effect using it is removed
+    // const isProgrammaticScroll = useRef(false);
 
     // Keep the onScroll callback ref up-to-date
     useEffect(() => {
@@ -52,67 +58,46 @@ export const PreviewPane = forwardRef<PreviewPaneRef, PreviewPaneProps>(
     // --- Effect for Parsing Markdown ---
     // Re-parse markdown whenever the markdown content changes
     useEffect(() => {
-      // Parse the markdown using the utility function
-      const { html: parsedHtml, headings: parsedHeadings } =
-        parseMarkdown(markdown);
-      setHtml(parsedHtml); // Update the local HTML state
-      setHeadings(parsedHeadings); // Update the headings list in the Zustand store
-    }, [markdown, setHeadings]); // Dependencies: run when markdown or setHeadings changes
-
-    // --- Effect for Handling Programmatic Scrolling ---
-    // Scroll the preview pane when the scrollToPercent prop changes
-    useEffect(() => {
-      // Check if scrolling is requested and the container ref is available
-      if (scrollToPercent !== null && previewContainerRef.current) {
-        const container = previewContainerRef.current;
-        const maxScrollTop = container.scrollHeight - container.clientHeight;
-        // Calculate target scroll position based on percentage
-        const targetScrollTop = maxScrollTop * scrollToPercent;
-
-        // Mark that this scroll is programmatic
-        isProgrammaticScroll.current = true;
-        // Set the scroll position (ensure it's not negative)
-        container.scrollTop = Math.max(0, targetScrollTop);
-
-        // Reset the programmatic scroll flag after a short delay
-        // This prevents the scroll event handler from ignoring subsequent user scrolls too soon
-        const timer = setTimeout(() => {
-          isProgrammaticScroll.current = false;
-        }, 150); // Adjust delay as needed (should be > scroll event debounce/throttle time)
-        return () => clearTimeout(timer); // Cleanup timer on effect re-run or unmount
+      try {
+        // Use the imported parseMarkdown function
+        const { html: parsedHtml, headings: parsedHeadings } =
+          parseMarkdown(markdown);
+        setHtml(parsedHtml); // Update the local HTML state
+        setHeadings(parsedHeadings); // Update the headings list in the Zustand store
+      } catch (error) {
+        console.error('Markdown parsing error:', error);
+        setHtml('<p class="text-destructive">Error rendering Markdown.</p>'); // Display error message
+        setHeadings([]); // Clear headings on error
       }
-    }, [scrollToPercent]); // Dependency: run when scrollToPercent changes
+    }, [markdown, setHeadings]); // Dependencies
+
+    // Remove the useEffect for programmatic scrolling based on scrollRef/scrollToPercent
+    // useEffect(() => { ... }, [scrollRef]);
 
     // --- Scroll Event Handler ---
-    // Notify the parent component about user-initiated scrolls
+    // Keep the existing user scroll handler
     const handleScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
-      // If the scroll was triggered programmatically, ignore this event
-      if (isProgrammaticScroll.current) {
-        return;
-      }
-      // If an onScroll callback is provided, call it with current scroll info
+      // Remove check for isProgrammaticScroll.current
+      // if (isProgrammaticScroll.current) { return; }
       if (onScrollRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-        onScrollRef.current({ scrollTop, scrollHeight, clientHeight });
+        // Pass ScrollInfo object directly if that's the expected type
+        onScrollRef.current({ scrollTop, scrollHeight, clientHeight } as any); // Cast if necessary, ensure type match
       }
-    }, []); // No dependencies, relies on refs
+    }, []); // No dependencies needed if only using refs
 
     // --- Imperative Handle ---
-    // Expose functions (like scrollToHeading) to the parent component via the ref
     const scrollToHeading = useCallback((id: string) => {
-      // Find the heading element by its ID within the preview container
-      const element = document.getElementById(id);
-      if (element && previewContainerRef.current) {
-        // Use the native scrollIntoView method for smooth scrolling
+      const element = previewContainerRef.current?.querySelector(`#${CSS.escape(id)}`); // Use querySelector for safety
+      if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
         console.warn(
           `[PreviewPane] Heading element with id "${id}" not found.`
         );
       }
-    }, []); // No dependencies
+    }, []);
 
-    // Define the methods exposed by the ref
     useImperativeHandle(
       ref,
       () => ({
@@ -120,25 +105,28 @@ export const PreviewPane = forwardRef<PreviewPaneRef, PreviewPaneProps>(
         getContainer: () => previewContainerRef.current,
       }),
       [scrollToHeading]
-    ); // Dependency: ensure scrollToHeading is stable
+    );
 
     // --- Render ---
     return (
-      // Assign the ref to the scrollable container
-      <div
-        ref={previewContainerRef}
-        className="preview-pane overflow-y-auto h-full bg-background" // Use theme background
-        onScroll={handleScroll} // Attach the scroll event handler
+      // Assign previewContainerRef to the ScrollArea's viewport using its dedicated prop if available,
+      // or find the viewport element manually if needed for getContainer.
+      // Assuming ScrollArea's default structure works with getContainer targeting previewContainerRef.
+      <ScrollArea
+        ref={previewContainerRef} // Assign ref here IF ScrollArea forwards it to the scrollable div
+        className={cn('h-full w-full bg-card p-4 rounded-md border', className)}
+        onScroll={handleScroll}
+        // REMOVE viewportRef prop
+        data-testid="preview-pane"
       >
-        {/* Render the HTML content using dangerouslySetInnerHTML */}
+        {/* Render the HTML content */}
         <div
-          // Apply Tailwind Typography styles for nice Markdown rendering
-          className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-none p-6 md:p-8" // Adjust padding
+          // Tailwind Typography styles
+          className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-none p-6 md:p-8"
           dangerouslySetInnerHTML={{ __html: html }}
         />
-      </div>
+      </ScrollArea>
     );
   }
 );
-// Set display name for better debugging in React DevTools
 PreviewPane.displayName = 'PreviewPane';

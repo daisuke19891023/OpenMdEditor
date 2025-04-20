@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useEditorStore } from '@/store/editorStore';
 
 export const EditorStatusBar: React.FC = () => {
@@ -7,7 +7,10 @@ export const EditorStatusBar: React.FC = () => {
 
   return (
     // Use Shadcn UI theme variables for colors and borders
-    <div className="bg-muted/40 px-4 py-1 flex justify-end items-center border-t flex-shrink-0 text-sm text-muted-foreground h-8">
+    <div
+      role="status"
+      className="bg-muted/40 px-4 py-1 flex justify-end items-center border-t flex-shrink-0 text-sm text-muted-foreground h-8"
+    >
       {' '}
       {/* Fixed height */}
       {/* Display word count */}

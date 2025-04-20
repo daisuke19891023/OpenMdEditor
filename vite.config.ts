@@ -55,7 +55,7 @@ export default defineConfig({
     // Set the test environment (jsdom simulates a browser DOM)
     environment: 'jsdom',
     // File(s) to run before each test file (e.g., for setting up Jest DOM matchers)
-    setupFiles: './src/setupTests.ts',
+    // setupFiles: './src/setupTests.ts',
     // Enable processing of CSS files imported in components during tests
     css: true,
     // Test coverage configuration

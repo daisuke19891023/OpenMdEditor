@@ -1,8 +1,8 @@
 import type { Draft } from '@/types/editor'; // Import the Draft type definition
 
 // Constants for localStorage keys
-const DRAFTS_KEY = 'ai_markdown_editor_drafts'; // Use a more specific key
-const CURRENT_DRAFT_ID_KEY = 'ai_markdown_editor_current_draft_id';
+const DRAFTS_KEY = 'markdownDrafts';
+const CURRENT_DRAFT_ID_KEY = 'currentDraftId';
 
 /**
  * Helper function to safely parse JSON from localStorage.
