@@ -1,0 +1,22 @@
+import React from 'react';
+import { useEditorStore } from '@/store/editorStore';
+
+export const EditorStatusBar: React.FC = () => {
+  // Get word and character counts from the editor store
+  const { wordCount, charCount } = useEditorStore();
+
+  return (
+    // Use Shadcn UI theme variables for colors and borders
+    <div className="bg-muted/40 px-4 py-1 flex justify-end items-center border-t flex-shrink-0 text-sm text-muted-foreground h-8">
+      {' '}
+      {/* Fixed height */}
+      {/* Display word count */}
+      <span>{wordCount} 単語</span>
+      {/* Separator */}
+      <span className="mx-2">|</span>
+      {/* Display character count */}
+      <span>{charCount} 文字</span>
+      {/* Placeholder for other potential status indicators (e.g., autosave status, cursor position) */}
+    </div>
+  );
+};

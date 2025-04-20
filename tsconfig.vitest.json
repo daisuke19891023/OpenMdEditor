@@ -1,0 +1,36 @@
+{
+    // Optional: Separate tsconfig specifically for Vitest if needed.
+    // Often, the main tsconfig.json is sufficient if configured correctly.
+    // This file can extend the main tsconfig and add test-specific settings.
+    "extends": "./tsconfig.json", // Inherit settings from the main tsconfig
+    "compilerOptions": {
+      // Override or add options specific to the testing environment
+      "outDir": "dist-test", // Specify a different output directory if needed (usually not emitted)
+      "lib": ["ES2020", "DOM", "DOM.Iterable"], // Ensure DOM types are available for jsdom
+      "types": [
+          "vitest/globals", // Include Vitest global types (describe, it, expect)
+          "@testing-library/jest-dom", // Include Jest DOM matcher types
+          "node" // Include Node types if tests interact with Node APIs
+        ],
+      // "jsx": "react-jsx", // Inherited from tsconfig.json
+      // Ensure module resolution works for test files
+      // "moduleResolution": "bundler", // Inherited
+      // "baseUrl": ".", // Inherited
+      // "paths": { "@/*": ["src/*"] }, // Inherited
+    },
+    // Include test files and setup files
+    "include": [
+      "src/**/*.test.ts",
+      "src/**/*.test.tsx",
+      "src/setupTests.ts", // Include the Vitest setup file
+      "src/**/*.ts", // Include source files for type checking during tests
+      "src/**/*.tsx"
+    ],
+    // Exclude files not needed for testing
+    "exclude": [
+      "node_modules",
+      "dist",
+      "api" // Exclude API routes if tested separately with Jest/Node env
+    ]
+  }
+  

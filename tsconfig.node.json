@@ -1,0 +1,48 @@
+{
+  // This tsconfig is specifically for files that run in a Node.js environment
+  // (e.g., Vite config, Tailwind config, PostCSS config, Jest config, Cypress config, API routes)
+  "compilerOptions": {
+    // --- Project Structure ---
+    "composite": true, // Enable project references (allows this config to be referenced by the main tsconfig.json)
+    "outDir": "dist-node", // Specify output directory if compiling Node code (usually not needed for config files)
+    "rootDir": ".", // Root directory of source files
+
+    // --- Module System & Resolution ---
+    "module": "ESNext", // Use ES modules for modern Node.js compatibility (or "CommonJS" if needed)
+    "moduleResolution": "bundler", // Align with the main tsconfig for consistency, or use "NodeNext"/"Node16"
+    "baseUrl": ".", // Base directory for path aliases
+    "paths": {
+      "@/*": ["src/*"], // Define "@/" alias consistent with main tsconfig
+      // Add mappings if needed for specific Node packages or Vercel AI SDK resolution
+      // "ai": ["./node_modules/ai/dist"]
+    },
+    "resolveJsonModule": true, // Allow importing JSON files
+
+    // --- JavaScript Target & Libs ---
+    "target": "ES2022", // Target a recent Node.js compatible ECMAScript version
+    "lib": ["ES2022", "DOM"], // Include necessary libraries (DOM might be needed for some tools like Cypress plugins)
+
+    // --- Interoperability ---
+    "esModuleInterop": true, // Enable compatibility with CommonJS modules
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
+    "forceConsistentCasingInFileNames": true,
+
+    // --- Type Checking ---
+    "strict": true, // Enable strict type checking
+    "skipLibCheck": true, // Skip type checking of declaration files
+
+    // --- Other ---
+    "types": ["node", "jest", "cypress"] // Include types for Node.js, Jest, and Cypress environments
+  },
+  // Files included for this specific Node.js context
+  "include": [
+    "vite.config.ts",
+    "tailwind.config.js", // Include JS config files for type checking if using JSDoc
+    "postcss.config.js",
+    "jest.config.cjs",
+    "cypress.config.ts",
+    "api/**/*.ts", // Include API routes
+    "*.d.ts", // Include global type declarations
+    "jest.setup.ts" // Include Jest setup file if it exists
+  ]
+}

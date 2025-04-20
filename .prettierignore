@@ -1,0 +1,46 @@
+# Ignore patterns for Prettier
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+build
+out
+storybook-static
+public/build
+
+# Cache directories
+.cache
+.parcel-cache
+.vite
+.next
+.nuxt
+.svelte-kit
+.docusaurus
+.angular
+*.tsbuildinfo
+
+# Coverage reports
+coverage
+.nyc_output
+
+# Log files
+*.log
+
+# Environment variables
+.env*
+
+# Generated files (like Shadcn UI components - optional)
+# src/components/ui/
+
+# Cypress files (can be formatted if desired)
+# cypress/
+
+# API routes (can be formatted if desired)
+# api/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

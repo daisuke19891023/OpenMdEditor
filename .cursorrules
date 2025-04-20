@@ -1,0 +1,122 @@
+以下は、このプロジェクトでCursor AIを使用する際に推奨される設定ファイル `.cursorrules` の内容です。プロジェクトのルートディレクトリにこの名前でファイルを作成してください。
+
+```yaml
+# .cursorrules for AI Markdown Editor project
+
+# --- Basic Project Info ---
+# Helps Cursor understand the core technologies.
+language: typescript
+framework: react
+ui_library: shadcn_ui
+build_tool: vite
+state_management: zustand
+
+# --- Formatting & Linting ---
+# Instruct Cursor to follow established code style guides.
+formatter: prettier # Use .prettierrc.json
+linter: eslint      # Use .eslintrc.cjs
+format_on_save: true # Suggests enabling format on save in the editor
+
+# --- Naming Conventions ---
+# Enforce consistent naming across the codebase.
+naming_convention:
+  components: PascalCase       # e.g., EditorToolbar.tsx
+  files: camelCase           # e.g., editorStore.ts (or PascalCase for components)
+  functions: camelCase
+  variables: camelCase
+  types: PascalCase            # e.g., interface EditorState
+  interfaces: PascalCase       # Avoid 'I' prefix (IEditorState)
+  constants: UPPER_SNAKE_CASE  # e.g., DRAFTS_KEY
+
+# --- Import Style ---
+# Maintain clean and consistent imports.
+import_style:
+  prefer_aliases: true         # Prefer using path aliases like @/
+  alias_mapping:
+    "@/": "src/"              # Define the alias mapping from tsconfig/vite config
+  group_imports: true          # Group imports logically (react, external, internal)
+  prefer_type_imports: true    # Use 'import type { ... }' for types/interfaces
+
+# --- Component Design ---
+# Guide Cursor on React component best practices.
+component_structure:
+  prefer_functional_components: true # Use functional components with hooks
+  props_interface: separate      # Define prop types using 'interface ComponentProps {}'
+  state_hook: useState           # Default to useState for local component state
+  use_arrow_functions: true      # Prefer 'const MyComponent: React.FC<...> = () => {}'
+  # component_file_structure: colocate_styles_tests # Or specify test location below
+
+# --- State Management ---
+# Specify guidelines for using Zustand.
+state_management_guidelines:
+  library: zustand
+  prefer_global_store: for_shared_state # Use Zustand for state shared across components
+  avoid_prop_drilling: true          # Encourage using stores instead of passing props deep down
+  store_structure: feature_based     # Stores are split by feature (editor, ui, ai)
+  action_naming: verbNoun          # e.g., setMarkdown, toggleChatOpen
+
+# --- Library & API Usage ---
+# Specify preferred libraries and API interaction patterns.
+preferred_libraries:
+  ui_components: shadcn_ui       # Use components from src/components/ui (Shadcn)
+  state: zustand
+  icons: lucide-react            # Preferred icon library
+  http_client: fetch             # Use native fetch for API calls (primarily in API routes)
+  ai_sdk: ai/react               # Use Vercel AI SDK hooks (useChat)
+  testing: ["vitest", "react_testing_library", "cypress"] # Testing stack
+  markdown_parser: marked        # Current Markdown parser
+  diff_library: diff             # Current diff library
+
+api_guidelines:
+  error_handling: try_catch_toast # Use try/catch for async calls, show errors via sonner toast
+  api_route_location: /api       # API routes are in /api directory (Vercel convention)
+  use_streaming_response: true   # Prefer streaming responses for AI interactions
+
+# --- Testing ---
+# Define the testing strategy and tools.
+testing_guidelines:
+  unit_test_framework: vitest
+  component_test_library: react_testing_library # Use RTL with Vitest
+  e2e_test_framework: cypress
+  test_file_location: __tests__ # Place unit/component tests in __tests__ subdirectories
+  # or: test_file_location: alongside_component # Place *.test.tsx next to *.tsx
+  encourage_tests: true          # Encourage writing tests for new features and bug fixes
+  prefer_mocking: for_external_dependencies # Mock stores, API calls, services in unit tests (use vi.mock)
+  e2e_api_mocking: cy_intercept # Use cy.intercept() for mocking API in E2E tests
+
+# --- TypeScript Usage ---
+# Enforce strict and clear TypeScript usage.
+type_safety:
+  strict: true                   # Adhere to strict mode in tsconfig.json
+  no_implicit_any: true          # Disallow implicit 'any' types
+  explicit_return_types: true    # Prefer explicit return types for functions
+  use_utility_types: encourage   # Encourage using utility types like Partial, Readonly, Pick
+
+# --- Other Guidelines ---
+accessibility:
+  consider_aria: true            # Encourage using ARIA attributes for accessibility
+  # check_contrast: if_possible # Consider color contrast (manual check or tool)
+
+comments:
+  encourage_jsdoc: true          # Encourage JSDoc comments for functions, types, complex logic
+  use_todo_comments: true        # Use TODO: for marking pending work
+
+# --- Project Specific ---
+# Hints specific to this Markdown editor project.
+markdown_editor:
+  core_library: codemirror       # Use CodeMirror 6
+  preview_library: marked        # Use Marked for parsing
+  preview_styling: tailwind_typography # Use @tailwindcss/typography for styling preview
+  toc_generation: from_parser    # TOC is generated by extending the markdown parser
+
+storage:
+  drafts: localStorage         # Drafts are stored in localStorage via storageService.ts
+
+# --- Cursor Specific Hints (Optional) ---
+# Guide Cursor's behavior during pair programming.
+# ai_pair_programming:
+#   preferred_style: concise_and_clear # Ask Cursor for clear, readable code
+#   explain_changes: when_complex # Request explanations for complex code generation/edits
+#   generate_tests: alongside_code # Ask Cursor to help generate tests for new code
+#   refactor_suggestions: welcome # Indicate openness to refactoring suggestions
+

@@ -1,0 +1,75 @@
+/* This file defines global styles and CSS variables for the application */
+
+/* Allow custom variants for dark mode */
+@custom-variant dark (&:is(.dark *));
+
+/* Define CSS variables for light mode (and default) */
+:root {
+  --background: 0 0% 100%; /* White */
+  --foreground: 224 71.4% 4.1%; /* Dark Blue/Black */
+  --card: 0 0% 100%;
+  --card-foreground: 224 71.4% 4.1%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+  --primary: 221.2 83.2% 53.3%; /* Blue */
+  --primary-foreground: 210 20% 98%; /* Light Gray/White */
+  --secondary: 215 27.9% 90.8%; /* Light Gray */
+  --secondary-foreground: 220 14.3% 9.1%; /* Dark Gray */
+  --muted: 215 20.2% 94.5%; /* Lighter Gray */
+  --muted-foreground: 215 20.2% 65.1%; /* Gray */
+  --accent: 215 27.9% 90.8%; /* Light Gray (same as secondary) */
+  --accent-foreground: 220 14.3% 9.1%; /* Dark Gray */
+  --destructive: 0 84.2% 60.2%; /* Red */
+  --destructive-foreground: 210 20% 98%; /* Light Gray/White */
+  --border: 215 20.2% 91.0%; /* Light Gray Border */
+  --input: 215 20.2% 86.9%; /* Slightly darker gray for input borders */
+  --ring: 221.2 83.2% 53.3%; /* Blue for focus rings */
+  --radius: 0.5rem; /* Default border radius */
+}
+
+/* Define CSS variables for dark mode */
+.dark {
+  --background: 224 71.4% 4.1%; /* Dark Blue/Black */
+  --foreground: 210 20% 98%; /* Light Gray/White */
+  --card: 224 71.4% 4.1%;
+  --card-foreground: 210 20% 98%;
+  --popover: 224 71.4% 4.1%;
+  --popover-foreground: 210 20% 98%;
+  --primary: 217.2 91.2% 59.8%; /* Brighter Blue */
+  --primary-foreground: 210 20% 98%;
+  --secondary: 215 27.9% 16.9%; /* Dark Gray */
+  --secondary-foreground: 210 20% 98%;
+  --muted: 215 27.9% 16.9%; /* Dark Gray (same as secondary) */
+  --muted-foreground: 217.9 10.6% 64.9%; /* Lighter Gray */
+  --accent: 215 27.9% 16.9%; /* Dark Gray */
+  --accent-foreground: 210 20% 98%;
+  --destructive: 0 62.8% 30.6%; /* Darker Red */
+  --destructive-foreground: 210 20% 98%;
+  --border: 215 27.9% 16.9%; /* Dark Gray Border */
+  --input: 215 27.9% 16.9%; /* Dark Gray for input borders */
+  --ring: 217.2 91.2% 59.8%; /* Brighter Blue for focus rings */
+}
+
+/* Basic style reset and utility classes */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1; /* Enable common ligature features */
+}
+
+/* Ensure CodeMirror editor takes full height */
+.cm-editor {
+  height: 100%;
+  font-size: 14px; /* Adjust base font size for editor */
+  line-height: 1.6; /* Adjust line height */
+}
+
+/* Remove default focus ring and rely on custom styling */
+*:focus-visible {
+  outline: none;
+  box-shadow: none;
+}

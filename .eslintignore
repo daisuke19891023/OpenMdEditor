@@ -1,0 +1,50 @@
+# ESLint ignore patterns
+
+# Build output
+dist
+build
+out
+
+# Dependencies
+node_modules
+
+# Cache directories
+.cache
+.parcel-cache
+.vite
+.nuxt
+.next
+.svelte-kit
+.angular
+*.tsbuildinfo
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Coverage reports
+coverage
+.nyc_output
+
+# Configuration files for other tools (ESLint should lint itself via config)
+# vite.config.ts
+# postcss.config.js
+# tailwind.config.js
+# jest.config.cjs
+# cypress.config.ts
+
+# Generated files (like Shadcn UI components)
+# src/components/ui/
+
+# Cypress files (linted separately if needed)
+cypress/
+
+# API routes (linted separately if needed, e.g. with tsconfig.node.json)
+# api/
+
+# Public assets
+public/
