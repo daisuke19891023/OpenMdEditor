@@ -29,6 +29,15 @@ interface UIState {
   // Scroll Sync State (for Preview Pane)
   previewScrollToPercent: number | null; // Instruction to scroll PreviewPane
 
+  // Search and Replace State
+  isSearchReplaceDialogOpen: boolean;
+  searchTerm: string;
+  replaceTerm: string;
+  searchOptions: {
+    isRegex: boolean;
+    caseSensitive: boolean;
+  };
+
   // --- Actions ---
   setActiveTab: (tab: EditorTab) => void;
   setChatOpen: (isOpen: boolean) => void;
@@ -44,6 +53,13 @@ interface UIState {
   ) => void;
   closeContextMenu: () => void;
   setPreviewScrollToPercent: (percent: number | null) => void;
+
+  // Actions for Search and Replace
+  openSearchReplaceDialog: () => void;
+  closeSearchReplaceDialog: () => void;
+  setSearchTerm: (term: string) => void;
+  setReplaceTerm: (term: string) => void;
+  setSearchOptions: (options: Partial<UIState['searchOptions']>) => void;
 }
 
 // Create the Zustand store for UI state
@@ -59,6 +75,14 @@ export const useUIStore = create<UIState>((set, get) => ({
   contextMenuPosition: null,
   contextMenuContext: null,
   previewScrollToPercent: null,
+  // Initial Search and Replace State
+  isSearchReplaceDialogOpen: false,
+  searchTerm: '',
+  replaceTerm: '',
+  searchOptions: {
+    isRegex: false,
+    caseSensitive: false,
+  },
 
   // --- Actions Implementation ---
   setActiveTab: (tab) => set({ activeTab: tab }),
@@ -101,6 +125,22 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   setPreviewScrollToPercent: (percent) =>
     set({ previewScrollToPercent: percent }),
+
+  // Actions for Search and Replace
+  openSearchReplaceDialog: () => set({ isSearchReplaceDialogOpen: true }),
+  closeSearchReplaceDialog: () =>
+    set({
+      isSearchReplaceDialogOpen: false,
+      // Optionally reset terms when closing
+      // searchTerm: '',
+      // replaceTerm: '',
+    }),
+  setSearchTerm: (term) => set({ searchTerm: term }),
+  setReplaceTerm: (term) => set({ replaceTerm: term }),
+  setSearchOptions: (options) =>
+    set((state) => ({
+      searchOptions: { ...state.searchOptions, ...options },
+    })),
 }));
 
 // Note: Dark mode state is now managed by ThemeProvider and useTheme hook.
