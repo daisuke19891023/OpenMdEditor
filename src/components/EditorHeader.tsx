@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { useTheme } from '@/components/providers/ThemeProvider'; // Import useTheme hook
 import { Button } from '@/components/ui/button'; // Import Shadcn Button

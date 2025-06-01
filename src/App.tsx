@@ -1,4 +1,3 @@
-import React from 'react';
 import EditorPage from './pages/EditorPage'; // Import the main page component
 
 /**

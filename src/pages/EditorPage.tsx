@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { EditorHeader } from '@/components/EditorHeader';
 import { EditorToolbar } from '@/components/EditorToolbar';
 import { EditorLayoutContent } from '@/components/EditorLayoutContent'; // Renamed from EditorLayout
 import { EditorStatusBar } from '@/components/EditorStatusBar';
 import { AiChatPanel } from '@/components/AiChatPanel';
 import { AiSuggestionDialog } from '@/components/AiSuggestionDialog';
+import { SearchReplaceDialog } from '@/components/SearchReplaceDialog'; // <-- Import here
 import { Toaster } from '@/components/ui/sonner'; // Use Shadcn Sonner for notifications
 import { TableOfContents } from '@/components/TableOfContents';
 import {
@@ -15,7 +16,7 @@ import {
 import { EditorContextMenu } from '@/components/EditorContextMenu'; // Import Context Menu
 import { useEditorStore } from '@/store/editorStore'; // Import stores
 import { useUIStore } from '@/store/uiStore';
-import type { PreviewPaneRef } from '@/components/PreviewPane'; // Import Ref type
+import type { PreviewPaneRef } from '@/components/PreviewPane';
 
 /**
  * Main application page component that orchestrates the editor layout and features.
@@ -165,6 +166,8 @@ const EditorPage: React.FC = () => {
       <AiSuggestionDialog />
       {/* Context Menu Component (conditionally rendered based on store state) */}
       <EditorContextMenu />
+      {/* Search and Replace Dialog (conditionally rendered based on store state) */}
+      <SearchReplaceDialog />
       {/* Notification Toaster Component */}
       <Toaster richColors position="top-right" closeButton />{' '}
       {/* Added closeButton */}

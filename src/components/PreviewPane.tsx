@@ -1,13 +1,12 @@
-import * as React from 'react';
 import {
   useEffect,
   useState,
   useRef,
-  UIEvent,
   forwardRef,
   useImperativeHandle,
   useCallback,
 } from 'react';
+import type { UIEvent } from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { parseMarkdown } from '@/lib/markdownParser'; // Re-import parseMarkdown
 import type { ScrollInfo, HeadingItem } from '@/types/editor'; // Keep ScrollInfo and HeadingItem

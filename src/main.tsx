@@ -1,5 +1,5 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { StrictMode } from 'react';
 // Use EditorPage directly or via App component
 // import App from './App.tsx';
 import EditorPage from './pages/EditorPage.tsx'; // Import the main page component
@@ -20,12 +20,12 @@ const root = ReactDOM.createRoot(rootElement);
 
 // Render the application within StrictMode and ThemeProvider
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     {/* Wrap the entire application with the ThemeProvider */}
     <ThemeProvider defaultTheme="system" storageKey="ai-md-editor-theme">
       {/* Render the main page component (or App component) */}
       <EditorPage />
       {/* <App /> */}
     </ThemeProvider>
-  </React.StrictMode>
+  </StrictMode>
 );

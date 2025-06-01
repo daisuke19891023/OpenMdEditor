@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 
 // Define the possible theme values
 type Theme = 'dark' | 'light' | 'system';
 
 // Define the props for the ThemeProvider component
 type ThemeProviderProps = {
-  children: React.ReactNode; // The child components to wrap
+  children: ReactNode; // The child components to wrap
   defaultTheme?: Theme; // The default theme to use if none is set in storage
   storageKey?: string; // The key to use for storing the theme in localStorage
 };

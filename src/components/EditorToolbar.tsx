@@ -1,12 +1,12 @@
-import * as React from 'react';
 import { useCallback, useState, useEffect } from 'react';
+import type { FC } from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { useUIStore } from '@/store/uiStore';
 // import { useAIStore } from '@/store/aiStore'; // Not directly needed here anymore
 import { EditorTab, Draft } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { FilePlus, FolderOpen, Save, Trash2 } from 'lucide-react';
+import { FilePlus, FolderOpen, Save, Trash2, Search } from 'lucide-react'; // Added Search
 import { storageService } from '@/lib/storageService';
 import {
   DropdownMenu,
@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner'; // Import toast for notifications
 
-export const EditorToolbar: React.FC = () => {
+export const EditorToolbar: FC = () => {
   // --- Zustand Store Hooks ---
   // Get state and actions from stores
   const {
@@ -38,7 +38,7 @@ export const EditorToolbar: React.FC = () => {
     saveCurrentDraft: saveAction,
     loadDraft: loadAction,
   } = useEditorStore();
-  const { activeTab, setActiveTab } = useUIStore();
+  const { activeTab, setActiveTab, openSearchReplaceDialog } = useUIStore(); // Added openSearchReplaceDialog
 
   // --- Local State ---
   // State to hold the list of drafts for the "Open" dropdown
@@ -197,6 +197,11 @@ export const EditorToolbar: React.FC = () => {
               •
             </span>
           )}
+        </Button>
+
+        {/* Search and Replace Button - NEW */}
+        <Button variant="ghost" size="sm" onClick={openSearchReplaceDialog}>
+          <Search className="h-4 w-4 mr-1" /> 検索
         </Button>
       </div>
       {/* Center Section: View Mode Toggle */}

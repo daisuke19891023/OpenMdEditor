@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
+import type { FC } from 'react';
 import {
   EditorState,
   Extension,
@@ -105,7 +105,7 @@ const markdownSupport: Extension = markdown({
 });
 
 // --- Component Definition ---
-const CodeMirrorEditor = ({
+const CodeMirrorEditor: FC<CodeMirrorEditorProps> = ({
   value,
   onChange,
   isDarkMode,

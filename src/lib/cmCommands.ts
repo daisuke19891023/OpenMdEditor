@@ -1,6 +1,14 @@
 import { EditorView, KeyBinding } from '@codemirror/view';
 import { EditorSelection, Transaction, Line } from '@codemirror/state';
 import { indentMore, indentLess } from '@codemirror/commands';
+import {
+  SearchQuery,
+  findNext as cmFindNext,
+  findPrevious as cmFindPrevious,
+  replaceNext as cmReplaceNext,
+  replaceAll as cmReplaceAll,
+  setSearchQuery
+} from '@codemirror/search';
 
 /**
  * Helper function to toggle surrounding characters around the selection.
@@ -329,6 +337,117 @@ export const toggleBulletListCommand = toggleLinePrefix('- ');
 export const toggleOrderedListCommand = toggleLinePrefix('1. '); // Basic implementation
 export const toggleQuoteCommand = toggleLinePrefix('> ');
 export const toggleCodeBlockCommand = toggleCodeBlock;
+
+// --- Search and Replace Commands ---
+
+export interface SearchOptions {
+  isRegex?: boolean;
+  caseSensitive?: boolean;
+  wholeWord?: boolean;
+  literal?: boolean;
+}
+
+// Helper to create a SearchQuery instance
+const createSearchQueryInstance = (
+  searchTerm: string,
+  options: SearchOptions,
+  replaceTerm?: string
+): SearchQuery => {
+  return new SearchQuery({
+    search: searchTerm,
+    caseSensitive: !!options.caseSensitive,
+    regexp: !!options.isRegex,
+    literal: !!options.literal,
+    wholeWord: !!options.wholeWord,
+    replace: replaceTerm || '',
+  });
+};
+
+export const findNextCommand = (
+  view: EditorView,
+  searchTerm: string,
+  options: SearchOptions
+): boolean => {
+  if (!searchTerm) return false;
+  const query = createSearchQueryInstance(searchTerm, options);
+  view.dispatch({ effects: setSearchQuery.of(query) });
+  return cmFindNext(view);
+};
+
+export const findPreviousCommand = (
+  view: EditorView,
+  searchTerm: string,
+  options: SearchOptions
+): boolean => {
+  if (!searchTerm) return false;
+  const query = createSearchQueryInstance(searchTerm, options);
+  view.dispatch({ effects: setSearchQuery.of(query) });
+  return cmFindPrevious(view);
+};
+
+export const replaceCurrentCommand = (
+  view: EditorView,
+  searchTerm: string,
+  replaceTerm: string,
+  options: SearchOptions
+): boolean => {
+  if (!searchTerm) return false;
+  const query = createSearchQueryInstance(searchTerm, options, replaceTerm);
+  view.dispatch({ effects: setSearchQuery.of(query) });
+
+  // Ensure a match is selected for replaceNext to work reliably.
+  // This might involve finding the next match if the current selection isn't one.
+  // For now, we proceed assuming the user has a match selected or findNext was just called.
+  // A more robust version might check view.state.selection and call findNextCommand if needed.
+
+  // const currentSelection = view.state.selection.main;
+  // if (currentSelection.empty || !query.matches(view.state.sliceDoc(currentSelection.from, currentSelection.to), currentSelection.from, view.state.doc)) {
+  //   if (!cmFindNext(view)) return false; // Try to find next, if not found, can't replace
+  // }
+
+  return cmReplaceNext(view);
+};
+
+export const replaceAllCommand = (
+  view: EditorView,
+  searchTerm: string,
+  replaceTerm: string,
+  options: SearchOptions
+): number => {
+  if (!searchTerm) return 0;
+  const query = createSearchQueryInstance(searchTerm, options, replaceTerm);
+  // No need to dispatch setSearchQuery here if we are manually iterating,
+  // but if we were to use cmReplaceAll directly, we would.
+  // view.dispatch({ effects: setSearchQuery.of(query) });
+
+  const { state } = view;
+  const { doc } = state;
+  let changesCount = 0;
+  const trChanges: { from: number; to: number; insert: string }[] = [];
+
+  const cursor = query.getCursor(doc);
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const nextMatch = cursor.next(); // Renamed 'next' to 'nextMatch' to avoid conflict
+    if (nextMatch.done) break;
+    // Ensure nextMatch.value has 'from' and 'to' properties
+    if (nextMatch.value && typeof nextMatch.value.from === 'number' && typeof nextMatch.value.to === 'number') {
+        trChanges.push({ from: nextMatch.value.from, to: nextMatch.value.to, insert: query.replace });
+        changesCount++;
+    } else {
+        // This case might indicate an issue with the match or cursor behavior
+        // For robustness, log or handle this, but for now, break to avoid errors
+        console.warn('Search cursor yielded an unexpected value:', nextMatch.value);
+        break;
+    }
+  }
+
+  if (changesCount > 0) {
+    view.dispatch(view.state.update({changes: trChanges, selection: view.state.selection, scrollIntoView: true, userEvent: 'input.replace'}));
+  }
+  return changesCount;
+};
+
 
 // --- Combined Keymap for Editor ---
 export const markdownKeymap: readonly KeyBinding[] = [
