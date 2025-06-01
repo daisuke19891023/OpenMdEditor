@@ -157,6 +157,40 @@ const CodeMirrorEditor: FC<CodeMirrorEditorProps> = ({
               onScrollRef.current({ scrollTop, scrollHeight, clientHeight });
             }
           },
+          paste(event: ClipboardEvent, view: EditorView) {
+            const items = event.clipboardData?.items;
+            if (!items) return;
+
+            let imagePasted = false;
+            for (let i = 0; i < items.length; i++) {
+              const item = items[i];
+              if (item.kind === 'file' && item.type.startsWith('image/')) {
+                const file = item.getAsFile();
+                if (file) {
+                  imagePasted = true;
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    const markdownImage = `![](${reader.result})`;
+                    const selection = view.state.selection.main;
+                    view.dispatch({
+                      changes: {
+                        from: selection.from,
+                        to: selection.to,
+                        insert: markdownImage,
+                      },
+                      selection: EditorSelection.cursor(
+                        selection.from + markdownImage.length
+                      ), // Move cursor after inserted image
+                    });
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }
+            }
+            if (imagePasted) {
+              event.preventDefault(); // Prevent default paste behavior only if an image was handled
+            }
+          },
         }),
         themeExtension, // Apply the selected theme
         editorKeymap, // Apply combined keymaps

@@ -101,7 +101,7 @@ export const configureMarkdownParser = (): ((
   // --- Customize Other Elements (Optional but Recommended) ---
   // Image rendering with classes and lazy loading
   renderer.image = (href, title, text): string => {
-    const cleanHref = DOMPurify.sanitize(href || '');
+    const cleanHref = href || ''; // Allow data URIs, main sanitize will handle it
     const cleanTitle = title ? DOMPurify.sanitize(title) : '';
     const cleanText = DOMPurify.sanitize(text);
     return `<img src="${cleanHref}" alt="${cleanText}" title="${cleanTitle}" class="max-w-full h-auto rounded my-2" loading="lazy" />`;
