@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type { FC } from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { HeadingItem } from '@/types/editor';
 import { cn } from '@/lib/utils'; // Shadcn UI utility for class names
@@ -9,7 +9,7 @@ interface TableOfContentsProps {
   onHeadingClick: (id: string) => void;
 }
 
-export const TableOfContents: React.FC<TableOfContentsProps> = ({
+export const TableOfContents: FC<TableOfContentsProps> = ({
   onHeadingClick,
 }: TableOfContentsProps) => {
   // Get the list of headings from the Zustand store

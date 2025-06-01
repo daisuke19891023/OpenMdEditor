@@ -1,7 +1,5 @@
-import * as React from 'react';
 import { useCallback, useState, useEffect } from 'react';
-import * as React from 'react';
-import { useCallback, useState, useEffect } from 'react';
+import type { FC } from 'react';
 import { useEditorStore } from '@/store/editorStore';
 import { useUIStore } from '@/store/uiStore';
 // import { useAIStore } from '@/store/aiStore'; // Not directly needed here anymore
@@ -31,7 +29,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner'; // Import toast for notifications
 
-export const EditorToolbar: React.FC = () => {
+export const EditorToolbar: FC = () => {
   // --- Zustand Store Hooks ---
   // Get state and actions from stores
   const {

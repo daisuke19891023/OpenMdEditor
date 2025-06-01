@@ -1,7 +1,9 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
 import { useEditorStore } from '@/store/editorStore';
+import { useUIStore } from '@/store/uiStore';
 
-export const EditorStatusBar: React.FC = () => {
+export const EditorStatusBar: FC = () => {
   // Get word and character counts from the editor store
   const { wordCount, charCount } = useEditorStore();
 

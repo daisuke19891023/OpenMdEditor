@@ -1,9 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { EditorHeader } from '@/components/EditorHeader';
-import { EditorToolbar } from '@/components/EditorToolbar';
-import { EditorLayoutContent } from '@/components/EditorLayoutContent'; // Renamed from EditorLayout
-import { EditorStatusBar } from '@/components/EditorStatusBar';
-import React, { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { EditorHeader } from '@/components/EditorHeader';
 import { EditorToolbar } from '@/components/EditorToolbar';
 import { EditorLayoutContent } from '@/components/EditorLayoutContent'; // Renamed from EditorLayout
@@ -21,7 +16,7 @@ import {
 import { EditorContextMenu } from '@/components/EditorContextMenu'; // Import Context Menu
 import { useEditorStore } from '@/store/editorStore'; // Import stores
 import { useUIStore } from '@/store/uiStore';
-import type { PreviewPaneRef } from '@/components/PreviewPane'; // Import Ref type
+import type { PreviewPaneRef } from '@/components/PreviewPane';
 
 /**
  * Main application page component that orchestrates the editor layout and features.

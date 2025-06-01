@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import type { FC } from 'react';
 import { useUIStore } from '@/store/uiStore';
 import { useAIStore } from '@/store/aiStore'; // chatMode のみ取得
 import { useEditorStore } from '@/store/editorStore';
@@ -19,7 +19,7 @@ import {
 import { Bot, Send, X, Loader2, RefreshCw } from 'lucide-react'; // アイコン
 import { toast } from 'sonner'; // 通知用
 
-export const AiChatPanel: React.FC = () => {
+export const AiChatPanel: FC = () => {
   // --- Zustand Store Hooks ---
   const { isChatOpen, setChatOpen, openPreviewDialog } = useUIStore();
   const { chatMode, setChatMode } = useAIStore();

@@ -1,5 +1,6 @@
 // src/components/SearchReplaceDialog.tsx
-import * as React from 'react';
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +26,7 @@ import {
 // No props needed if all interactions are via store
 // interface SearchReplaceDialogProps {}
 
-export const SearchReplaceDialog: React.FC = () => {
+export const SearchReplaceDialog: FC = () => {
   const {
     isSearchReplaceDialogOpen,
     closeSearchReplaceDialog,
@@ -38,7 +39,7 @@ export const SearchReplaceDialog: React.FC = () => {
   } = useUIStore();
 
   const { view } = useEditorStore();
-  const [message, setMessage] = React.useState('');
+  const [message, setMessage] = useState('');
 
   const handleFindNext = () => {
     setMessage('');
@@ -95,13 +96,13 @@ export const SearchReplaceDialog: React.FC = () => {
   };
 
   // This effect clears the message when the dialog is closed or search term changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isSearchReplaceDialogOpen) {
       setMessage('');
     }
   }, [isSearchReplaceDialogOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMessage('');
   }, [searchTerm, replaceTerm, searchOptions]);
 
@@ -149,7 +150,7 @@ export const SearchReplaceDialog: React.FC = () => {
             <Checkbox
               id="regex"
               checked={searchOptions.isRegex}
-              onCheckedChange={(checked) => setSearchOptions({ isRegex: Boolean(checked) })}
+              onCheckedChange={(checked: boolean) => setSearchOptions({ isRegex: Boolean(checked) })}
               aria-label="Regular expression"
             />
             <Label htmlFor="regex" className="font-normal cursor-pointer">
@@ -160,7 +161,7 @@ export const SearchReplaceDialog: React.FC = () => {
             <Checkbox
               id="case-sensitive"
               checked={searchOptions.caseSensitive}
-              onCheckedChange={(checked) => setSearchOptions({ caseSensitive: Boolean(checked) })}
+              onCheckedChange={(checked: boolean) => setSearchOptions({ caseSensitive: Boolean(checked) })}
               aria-label="Case sensitive"
             />
             <Label htmlFor="case-sensitive" className="font-normal cursor-pointer">
@@ -172,7 +173,7 @@ export const SearchReplaceDialog: React.FC = () => {
             <Checkbox
               id="whole-word"
               checked={searchOptions.wholeWord} // Assuming wholeWord is added to store's searchOptions
-              onCheckedChange={(checked) => setSearchOptions({ wholeWord: Boolean(checked) })}
+              onCheckedChange={(checked: boolean) => setSearchOptions({ wholeWord: Boolean(checked) })}
               aria-label="Whole word"
             />
             <Label htmlFor="whole-word" className="font-normal cursor-pointer">
